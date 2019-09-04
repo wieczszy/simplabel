@@ -1,6 +1,5 @@
 import os
 import logging
-from matplotlib import pyplot as plt
 from PIL import ImageTk, Image
 
 
