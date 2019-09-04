@@ -1,6 +1,4 @@
 import configparser
-import json
-import os
 import logging
 import tkinter as tk
 from utils.image_tracker import ImageTracker
