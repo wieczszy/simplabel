@@ -38,7 +38,7 @@ class SimplabelGUI():
 
     def callback(self):
         if not self.e.get():
-            logging.info("Annotator ID has not been entered.")
+            logging.error("Annotator ID has not been entered.")
             messagebox.showerror("Error", "Enter your ID!")
         elif not self.v.get():
             logging.error("Class has not been selected.")
