@@ -1,6 +1,4 @@
 import configparser
-import json
-import os
 import logging
 import tkinter as tk
 from tkinter import messagebox
