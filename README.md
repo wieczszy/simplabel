@@ -17,3 +17,10 @@ classes = amusement, anger, awe, contentment, disgust, excitement, fear, sadness
 size = 500,500
 ```
 Then run the app with `python app.py`. Annotations are saved in the file specified in the config. When starting, the app checks whether the image have been already annotated so you don't have to annotate all images at once as long as you keep the same results file. Example files are provided in the repo. 
+
+## tkinter error
+If you get the error: `ImportError: No module named 'tkinter'` on Linux then try:
+
+`sudo apt-get install python3-tk`
+
+On Windows `tkinter` should come by default when installing Python. 
