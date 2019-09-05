@@ -15,7 +15,7 @@ class SimplabelGUI():
         self.classes = config['ANNOTATION']['CLASSES'].split(',')
         self.answers_file = config['DIRS']['ANSWERS_FILE']
 
-        self.master.title("Image annotation tool")
+        self.master.title("simplabel")
         self.img = self.it.get_image()
 
         tk.Label(self.master, text="Annotator ID").pack(anchor=tk.W)
