@@ -81,5 +81,8 @@ class SimplabelGUI():
         except IndexError:
             logging.error("There is no images in the directory.")
             messagebox.showerror("Error", "Selected directory does not contain any images or all images have been annnotated.")
+        except TypeError:
+            logging.error('Directory not selected.')
+            pass
         self.master.deiconify()
         
