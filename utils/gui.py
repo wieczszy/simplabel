@@ -25,7 +25,8 @@ class SimplabelGUI():
 
         sub_menu = tk.Menu(menu)
         menu.add_cascade(label="Options", menu=sub_menu)
-        sub_menu.add_command(label='Directory', command=self.select_dir)
+        sub_menu.add_command(label='Images directory', command=self.select_dir)
+        sub_menu.add_command(label='Edit classes', command=self.edit_classes)
 
         tk.Label(self.master, text="Annotator ID").pack(anchor=tk.W)
         tk.Entry(textvariable=self.e).pack(anchor=tk.W)
@@ -34,11 +35,15 @@ class SimplabelGUI():
         self.im_label = tk.Label(self.master, image=self.img)
         self.im_label.pack(anchor=tk.W)
 
+        # TODO: make the buttons possible to refresh with new values by self.update_classes()
+        self.radio_buttons = []
         for i in range(len(self.classes)):
-            tk.Radiobutton(self.master, 
-                           text=self.classes[i], 
-                           variable=self.v, 
-                           value=self.classes[i]).pack(anchor=tk.W)
+            self.radio_buttons.append(tk.Radiobutton(self.master,
+                                                        text=self.classes[i],
+                                                        variable=self.v,
+                                                        value=self.classes[i]))
+        for button in self.radio_buttons:
+            button.pack(anchor=tk.W)
 
         tk.Button(self.master, text="Submit", command=self.callback).pack(anchor=tk.W)
         tk.Button(self.master, text="Exit", command=self.close_window).pack(anchor=tk.W)
@@ -85,4 +90,26 @@ class SimplabelGUI():
             logging.error('Directory not selected.')
             pass
         self.master.deiconify()
-        
+
+    # TODO: make the radio buttons refresh with new values
+    def update_classes(self):
+        for i in range(len(self.classes)):
+            self.classes[i] = self.class_entry_values[i].get()
+
+        new_buttons = []
+        for i in range(len(self.classes)):
+            new_buttons.append(tk.Radiobutton(self.master,
+                                                text=self.classes[i],
+                                                variable=self.v,
+                                                value=self.classes[i]))
+        self.radio_buttons = new_buttons
+        self.master.update()
+
+    def edit_classes(self):
+        top = tk.Toplevel()
+        top.title('Edit classes')
+        self.class_entry_values = [tk.StringVar(top, value=class_name) for class_name in self.classes]
+        for i in range(len(self.classes)):
+            e = tk.Entry(master=top, textvariable=self.class_entry_values[i])
+            e.pack(anchor=tk.W)
+        tk.Button(top, text="Update", command=self.update_classes).pack(anchor=tk.W)
