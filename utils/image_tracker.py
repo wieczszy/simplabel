@@ -22,7 +22,7 @@ class ImageTracker():
             f.close()
         except FileNotFoundError:
             done_imgs = []
-            
+
         final_imgs = [img for img in all_imgs if img not in done_imgs]
 
         if not final_imgs:
