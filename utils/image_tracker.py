@@ -14,6 +14,7 @@ class ImageTracker():
 
     def _get_imgs(self):
         all_imgs = [os.path.join(self.im_dir, im) for im in os.listdir(self.im_dir)]
+        all_imgs = [img for img in all_imgs if not os.path.isdir(img)]
 
         try:
             f = open(self.answers_file)
