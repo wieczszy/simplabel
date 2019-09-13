@@ -2,6 +2,7 @@ import configparser
 import logging
 import tkinter as tk
 from tkinter import messagebox
+from tkinter import filedialog
 from utils.image_tracker import ImageTracker
 
 
@@ -14,9 +15,17 @@ class SimplabelGUI():
         self.e = tk.StringVar()
         self.classes = config['ANNOTATION']['CLASSES'].split(',')
         self.answers_file = config['DIRS']['ANSWERS_FILE']
+        self.size = tuple([int(x) for x in config['IMAGES']['SIZE'].split(',')])
 
         self.master.title("simplabel")
         self.img = self.it.get_image()
+
+        menu = tk.Menu(master)
+        master.config(menu=menu)
+
+        sub_menu = tk.Menu(menu)
+        menu.add_cascade(label="Options", menu=sub_menu)
+        sub_menu.add_command(label='Directory', command=self.select_dir)
 
         tk.Label(self.master, text="Annotator ID").pack(anchor=tk.W)
         tk.Entry(textvariable=self.e).pack(anchor=tk.W)
@@ -57,3 +66,20 @@ class SimplabelGUI():
 
     def close_window(self): 
         self.master.destroy()
+
+    def select_dir(self):
+        try:
+            self.master.withdraw()
+            folder = filedialog.askdirectory()
+            self.it = ImageTracker(folder, self.answers_file, self.size)
+            new_img = self.it.get_image()
+            self.im_label.configure(image=new_img)
+            self.im_label.image = new_img
+        except OSError:
+            logging.error('Invaild directory!')
+            messagebox.showerror('Error', 'Invaild directory!')
+        except IndexError:
+            logging.error("There is no images in the directory.")
+            messagebox.showerror("Error", "Selected directory does not contain any images or all images have been annnotated.")
+        self.master.deiconify()
+        

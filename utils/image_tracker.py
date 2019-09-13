@@ -27,7 +27,6 @@ class ImageTracker():
 
         if not final_imgs:
             logging.error('There is no images to annotate! Check if the directory is not empty.')
-            exit()
 
         self.imgs = final_imgs
 
