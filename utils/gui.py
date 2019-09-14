@@ -35,7 +35,6 @@ class SimplabelGUI():
         self.im_label = tk.Label(self.master, image=self.img)
         self.im_label.pack(anchor=tk.W)
 
-        # TODO: make the buttons possible to refresh with new values by self.update_classes()
         self.radio_buttons = []
         for i in range(len(self.classes)):
             self.radio_buttons.append(tk.Radiobutton(self.master,
@@ -69,7 +68,7 @@ class SimplabelGUI():
                 messagebox.showinfo("You're done!", "The is no more images.")
                 exit()
 
-    def close_window(self): 
+    def close_window(self):
         self.master.destroy()
 
     def select_dir(self):
@@ -91,19 +90,10 @@ class SimplabelGUI():
             pass
         self.master.deiconify()
 
-    # TODO: make the radio buttons refresh with new values
     def update_classes(self):
         for i in range(len(self.classes)):
             self.classes[i] = self.class_entry_values[i].get()
-
-        new_buttons = []
-        for i in range(len(self.classes)):
-            new_buttons.append(tk.Radiobutton(self.master,
-                                                text=self.classes[i],
-                                                variable=self.v,
-                                                value=self.classes[i]))
-        self.radio_buttons = new_buttons
-        self.master.update()
+            self.radio_buttons[i].config(text=self.classes[i])
 
     def edit_classes(self):
         top = tk.Toplevel()
