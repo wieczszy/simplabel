@@ -9,6 +9,10 @@ from utils.image_tracker import ImageTracker
 class SimplabelGUI():
     def __init__(self, master, it, config):
         self.master = master
+        self.master_top = tk.Frame(self.master)
+        self.master_bottom = tk.Frame(self.master)
+        self.master_top.pack(side=tk.TOP, anchor=tk.W)
+        self.master_bottom.pack(side=tk.BOTTOM)
         self.config = config
         self.it = it
         self.v = tk.StringVar()
@@ -28,8 +32,8 @@ class SimplabelGUI():
         sub_menu.add_command(label='Images directory', command=self.select_dir)
         sub_menu.add_command(label='Edit classes', command=self.edit_classes)
 
-        tk.Label(self.master, text="Annotator ID").pack(anchor=tk.W)
-        tk.Entry(textvariable=self.e).pack(anchor=tk.W)
+        tk.Label(self.master, text="Annotator ID:").pack(in_=self.master_top, side=tk.LEFT)
+        tk.Entry(textvariable=self.e).pack(in_=self.master_top, side=tk.LEFT)
         tk.Label(self.master, text="Select the class that describes the image the best.").pack(anchor=tk.W)
 
         self.im_label = tk.Label(self.master, image=self.img)
@@ -44,13 +48,16 @@ class SimplabelGUI():
         for button in self.radio_buttons:
             button.pack(anchor=tk.W)
 
-        tk.Button(self.master, text="Submit", command=self.callback).pack(anchor=tk.W)
-        tk.Button(self.master, text="Exit", command=self.close_window).pack(anchor=tk.W)
+        tk.Button(self.master, text="Submit", command=self.callback).pack(in_=self.master_bottom, side=tk.LEFT)
+        tk.Button(self.master, text="Exit", command=self.close_window).pack(in_=self.master_bottom, side=tk.LEFT)
 
     def callback(self):
         if not self.e.get():
             logging.error("Annotator ID has not been entered.")
             messagebox.showerror("Error", "Enter your ID!")
+        elif not self.classes:
+            logging.error("There are no classes!")
+            messagebox.showerror("Error", "There are no classes to use!")
         elif not self.v.get():
             logging.error("Class has not been selected.")
             messagebox.showerror("Error", "Select class!")
@@ -90,16 +97,50 @@ class SimplabelGUI():
             pass
         self.master.deiconify()
 
+    def edit_classes(self):
+        self.classes_popup = tk.Toplevel()
+        self.classes_popup_top = tk.Frame(self.classes_popup)
+        self.classes_popup_bottom = tk.Frame(self.classes_popup)
+        self.classes_popup_top.pack(side=tk.TOP)
+        self.classes_popup_bottom.pack(side=tk.BOTTOM)
+        self.classes_popup.title('Edit classes')
+        u = tk.Button(self.classes_popup, text="Update", command=self.update_classes)
+        a = tk.Button(self.classes_popup, text="Add class", command=self.add_class)
+        r = tk.Button(self.classes_popup, text="Remove class", command=self.remove_class)
+        u.pack(in_=self.classes_popup_top, side=tk.LEFT)
+        a.pack(in_=self.classes_popup_top, side=tk.LEFT)
+        r.pack(in_=self.classes_popup_top, side=tk.LEFT)
+        self.class_entry_values = [tk.StringVar(self.classes_popup, value=class_name) for class_name in self.classes]
+        self.edit_class_entries = []
+        for i in range(len(self.classes)):
+            e = tk.Entry(master=self.classes_popup, textvariable=self.class_entry_values[i])
+            e.pack(in_=self.classes_popup_bottom, anchor=tk.W)
+            self.edit_class_entries.append(e)
+
     def update_classes(self):
         for i in range(len(self.classes)):
             self.classes[i] = self.class_entry_values[i].get()
             self.radio_buttons[i].config(text=self.classes[i])
 
-    def edit_classes(self):
-        top = tk.Toplevel()
-        top.title('Edit classes')
-        self.class_entry_values = [tk.StringVar(top, value=class_name) for class_name in self.classes]
-        for i in range(len(self.classes)):
-            e = tk.Entry(master=top, textvariable=self.class_entry_values[i])
-            e.pack(anchor=tk.W)
-        tk.Button(top, text="Update", command=self.update_classes).pack(anchor=tk.W)
+    def add_class(self):
+        v = tk.StringVar(value="New class")
+        e = tk.Entry(master=self.classes_popup_bottom, textvariable=v)
+        e.pack(anchor=tk.SW)
+        self.classes.append(e.get())
+        self.edit_class_entries.append(e)
+        self.class_entry_values.append(e)
+        b = tk.Radiobutton(self.master, text=self.classes[-1], variable=self.v, value=self.classes[-1])
+        b.pack(anchor=tk.W)
+        self.radio_buttons.append(b)
+
+    def remove_class(self):
+        try:
+            self.edit_class_entries[-1].pack_forget()
+            self.radio_buttons[-1].pack_forget()
+            del self.edit_class_entries[-1]
+            del self.class_entry_values[-1]
+            del self.classes[-1]
+            del self.radio_buttons[-1]
+        except IndexError:
+            logging.error('There are no classes to remove.')
+            messagebox.showerror('Error', 'There are no classes to remove!')
