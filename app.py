@@ -10,10 +10,10 @@ if __name__ == "__main__":
     config.read('config.ini')
 
     IMAGES_DIR = config['DIRS']['IMAGES_DIR']
-    ANSWERS_FILE = config['DIRS']['ANSWERS_FILE']
+    ANNOTATIONS_FILE = config['DIRS']['ANNOTATIONS_FILE']
     IMAGE_SIZE = tuple([int(x) for x in config['IMAGES']['SIZE'].split(',')])
 
     master = tk.Tk()
-    it = ImageTracker(IMAGES_DIR, ANSWERS_FILE, IMAGE_SIZE)
+    it = ImageTracker(IMAGES_DIR, ANNOTATIONS_FILE, IMAGE_SIZE)
     gui = SimplabelGUI(master, it, config)
     tk.mainloop()
