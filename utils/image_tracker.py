@@ -14,6 +14,7 @@ class ImageTracker():
 
     def _get_imgs(self):
         all_imgs = [os.path.join(self.im_dir, im) for im in os.listdir(self.im_dir)]
+        all_imgs = [img for img in all_imgs if not os.path.isdir(img)]
 
         try:
             f = open(self.answers_file)
@@ -21,12 +22,11 @@ class ImageTracker():
             f.close()
         except FileNotFoundError:
             done_imgs = []
-            
+
         final_imgs = [img for img in all_imgs if img not in done_imgs]
 
         if not final_imgs:
             logging.error('There is no images to annotate! Check if the directory is not empty.')
-            exit()
 
         self.imgs = final_imgs
 

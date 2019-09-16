@@ -1,0 +1,10 @@
+
+Todo - code:
+  ☐ Handle the exception when there are non image files in the selected image directory.
+  ☐ Add option to display annotations in a separate window inside the app.
+  ☐ Improve the design of the "edit annotations file" popup window.
+  ☐ Move the config file away from the users view.
+  ☐ Write docstrings.
+
+Todo - repo:
+  ☐ Update README.
