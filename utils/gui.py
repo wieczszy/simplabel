@@ -17,10 +17,10 @@ class SimplabelGUI():
         self.it = it
         self.v = tk.StringVar()
         self.e = tk.StringVar()
-        self.classes = config['ANNOTATION']['CLASSES'].split(',')
-        self.answers_file = config['DIRS']['ANSWERS_FILE']
-        self.size = tuple([int(x) for x in config['IMAGES']['SIZE'].split(',')])
-        self.im_dir = config['DIRS']['IMAGES_DIR']
+        self.classes = self.config['ANNOTATION']['CLASSES'].split(',')
+        self.answers_file = self.config['DIRS']['ANSWERS_FILE']
+        self.size = tuple([int(x) for x in self.config['IMAGES']['SIZE'].split(',')])
+        self.im_dir = self.config['DIRS']['IMAGES_DIR']
         self.is_im_dir_default = True
 
         self.master.title("simplabel")
@@ -79,7 +79,9 @@ class SimplabelGUI():
             except IndexError:
                 logging.error("There is no more images to annotate.")
                 messagebox.showinfo("You're done!", "The is no more images.")
-                exit()
+                self.im_dir = self.config['DIRS']['IMAGES_DIR']
+                self.is_im_dir_default = True
+                self.refresh_image()
 
     def close_window(self):
         self.master.destroy()
@@ -89,10 +91,7 @@ class SimplabelGUI():
         try:
             self.master.withdraw()
             self.im_dir = filedialog.askdirectory()
-            self.it = ImageTracker(self.im_dir, self.answers_file, self.size)
-            new_img = self.it.get_image()
-            self.im_label.configure(image=new_img)
-            self.im_label.image = new_img
+            self.refresh_image()
             if not self.im_dir == tmp:
                 self.is_im_dir_default = False
         except OSError:
@@ -101,6 +100,9 @@ class SimplabelGUI():
         except IndexError:
             logging.error("There is no images in the directory.")
             messagebox.showerror("Error", "Selected directory does not contain any images or all images have been annnotated.")
+            self.im_dir = self.config['DIRS']['IMAGES_DIR']
+            self.is_im_dir_default = True
+            self.refresh_image()
         except TypeError:
             logging.error('Directory not selected.')
             pass
@@ -171,10 +173,13 @@ class SimplabelGUI():
     def update_im_size(self):
         try:
             self.size = (int(self.new_width.get()), int(self.new_height.get()))
-            self.it = ImageTracker(self.im_dir, self.answers_file, self.size)
-            refreshed_image = self.it.get_image()
-            self.im_label.configure(image=refreshed_image)
-            self.im_label.image = refreshed_image
+            self.refresh_image()
         except ValueError:
             logging.error('Invalid image size.')
             messagebox.showerror('Error', 'Set valid image size!')
+
+    def refresh_image(self):
+        self.it = ImageTracker(self.im_dir, self.answers_file, self.size)
+        new_img = self.it.get_image()
+        self.im_label.configure(image=new_img)
+        self.im_label.image = new_img
