@@ -20,6 +20,7 @@ class SimplabelGUI():
         self.classes = config['ANNOTATION']['CLASSES'].split(',')
         self.answers_file = config['DIRS']['ANSWERS_FILE']
         self.size = tuple([int(x) for x in config['IMAGES']['SIZE'].split(',')])
+        self.im_dir = config['DIRS']['IMAGES_DIR']
 
         self.master.title("simplabel")
         self.img = self.it.get_image()
@@ -31,6 +32,7 @@ class SimplabelGUI():
         menu.add_cascade(label="Options", menu=sub_menu)
         sub_menu.add_command(label='Images directory', command=self.select_dir)
         sub_menu.add_command(label='Edit classes', command=self.edit_classes)
+        sub_menu.add_command(label='Change image size', command=self.change_im_size)
 
         tk.Label(self.master, text="Annotator ID:").pack(in_=self.master_top, side=tk.LEFT)
         tk.Entry(textvariable=self.e).pack(in_=self.master_top, side=tk.LEFT)
@@ -81,8 +83,8 @@ class SimplabelGUI():
     def select_dir(self):
         try:
             self.master.withdraw()
-            folder = filedialog.askdirectory()
-            self.it = ImageTracker(folder, self.answers_file, self.size)
+            self.im_dir = filedialog.askdirectory()
+            self.it = ImageTracker(self.im_dir, self.answers_file, self.size)
             new_img = self.it.get_image()
             self.im_label.configure(image=new_img)
             self.im_label.image = new_img
@@ -144,3 +146,28 @@ class SimplabelGUI():
         except IndexError:
             logging.error('There are no classes to remove.')
             messagebox.showerror('Error', 'There are no classes to remove!')
+
+    def change_im_size(self):
+        self.size_popup = tk.Toplevel()
+        self.size_popup.title('Image preview size')
+        self.size_popup.geometry("250x150")
+        w = tk.StringVar()
+        h = tk.StringVar()
+        tk.Label(self.size_popup, text='Width').pack(anchor=tk.W)
+        self.new_width = tk.Entry(self.size_popup, textvariable=w)
+        self.new_width.pack(anchor=tk.W)
+        tk.Label(self.size_popup, text='Heigth').pack(anchor=tk.W)
+        self.new_height = tk.Entry(self.size_popup, textvariable=h)
+        self.new_height.pack(anchor=tk.W)
+        tk.Button(self.size_popup, text='Submit', command=self.update_im_size).pack(anchor=tk.W)
+
+    def update_im_size(self):
+        try:
+            self.size = (int(self.new_width.get()), int(self.new_height.get()))
+            self.it = ImageTracker(self.im_dir, self.answers_file, self.size)
+            refreshed_image = self.it.get_image()
+            self.im_label.configure(image=refreshed_image)
+            self.im_label.image = refreshed_image
+        except ValueError:
+            logging.error('Invalid image size.')
+            messagebox.showerror('Error', 'Set valid image size!')
