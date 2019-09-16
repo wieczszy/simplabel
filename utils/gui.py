@@ -21,6 +21,7 @@ class SimplabelGUI():
         self.answers_file = config['DIRS']['ANSWERS_FILE']
         self.size = tuple([int(x) for x in config['IMAGES']['SIZE'].split(',')])
         self.im_dir = config['DIRS']['IMAGES_DIR']
+        self.is_im_dir_default = True
 
         self.master.title("simplabel")
         self.img = self.it.get_image()
@@ -54,12 +55,15 @@ class SimplabelGUI():
         tk.Button(self.master, text="Exit", command=self.close_window).pack(in_=self.master_bottom, side=tk.LEFT)
 
     def callback(self):
-        if not self.e.get():
-            logging.error("Annotator ID has not been entered.")
-            messagebox.showerror("Error", "Enter your ID!")
+        if self.is_im_dir_default:
+            logging.error("Images directory has not been selected.")
+            messagebox.showerror("Error", "Images directory has not been selected!")
         elif not self.classes:
             logging.error("There are no classes!")
             messagebox.showerror("Error", "There are no classes to use!")
+        elif not self.e.get():
+            logging.error("Annotator ID has not been entered.")
+            messagebox.showerror("Error", "Enter your ID!")
         elif not self.v.get():
             logging.error("Class has not been selected.")
             messagebox.showerror("Error", "Select class!")
@@ -81,6 +85,7 @@ class SimplabelGUI():
         self.master.destroy()
 
     def select_dir(self):
+        tmp = self.im_dir
         try:
             self.master.withdraw()
             self.im_dir = filedialog.askdirectory()
@@ -88,6 +93,8 @@ class SimplabelGUI():
             new_img = self.it.get_image()
             self.im_label.configure(image=new_img)
             self.im_label.image = new_img
+            if not self.im_dir == tmp:
+                self.is_im_dir_default = False
         except OSError:
             logging.error('Invaild directory!')
             messagebox.showerror('Error', 'Invaild directory!')
