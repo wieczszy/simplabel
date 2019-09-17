@@ -107,7 +107,6 @@ class SimplabelGUI():
     def select_dir(self):
         tmp = self.im_dir
         try:
-            self.master.withdraw()
             self.im_dir = filedialog.askdirectory()
             self.refresh_image()
             if not self.im_dir == tmp:
@@ -124,7 +123,6 @@ class SimplabelGUI():
         except TypeError:
             logging.error('Directory not selected.')
             pass
-        self.master.deiconify()
 
     def edit_classes(self):
         self.classes_popup = tk.Toplevel()
