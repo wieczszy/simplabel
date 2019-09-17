@@ -234,22 +234,34 @@ class SimplabelGUI():
         self.annotations_file = self.selected_annotations_file.get()
 
     def edit_annotations(self):
-        annotations_popup = tk.Toplevel()
-        annotations_popup.title('Edit annotations files')
-        annotations_popup.geometry("300x240")
+        popup_window = tk.Toplevel()
+        popup_window.title('Edit annotations files')
+        popup_window.geometry("300x180")
 
-        tk.Label(annotations_popup, text='Enter filename (without extension).').pack(anchor=tk.W)
+        popup_window_top = tk.Frame(popup_window)
+        popup_window_bottom = tk.Frame(popup_window)
+        popup_window_top.pack(anchor=tk.W)
+        popup_window_bottom.pack(anchor=tk.W)
+
+        popup_window_bottom_top = tk.Frame(popup_window_bottom)
+        popup_window_bottom_bottom = tk.Frame(popup_window_bottom)
+        popup_window_bottom_top.pack(anchor=tk.W)
+        popup_window_bottom_bottom.pack(anchor=tk.W)
+
+        tk.Label(popup_window, text='Enter filename (without extension).').pack(in_=popup_window_top, anchor=tk.W)
         v = tk.StringVar()
-        self.new_annotations_entry = tk.Entry(master=annotations_popup, textvariable=v)
-        self.new_annotations_entry.pack(anchor=tk.W)
-        tk.Button(master=annotations_popup, text='Create file', command=self.create_annotations_file).pack(anchor=tk.W)
+        self.new_annotations_entry = tk.Entry(master=popup_window, textvariable=v)
+        self.new_annotations_entry.config(width=300)
+        self.new_annotations_entry.pack(in_=popup_window_top, anchor=tk.W)
+        tk.Button(master=popup_window, text='Create file', command=self.create_annotations_file).pack(in_=popup_window_top, side=tk.LEFT)
 
-        tk.Label(annotations_popup, text='Select annotations file').pack(anchor=tk.W)
-        self.file_select_menu = tk.OptionMenu(annotations_popup, self.selected_annotations_file, *self.annotations_files)
-        self.file_select_menu.pack(anchor=tk.W)
+        tk.Label(popup_window, text='Select annotations file').pack(in_=popup_window_bottom_top, anchor=tk.W)
+        self.file_select_menu = tk.OptionMenu(popup_window, self.selected_annotations_file, *self.annotations_files)
+        self.file_select_menu.config(width=300)
+        self.file_select_menu.pack(in_=popup_window_bottom_top, side=tk.LEFT)
 
-        tk.Button(master=annotations_popup, text='Set as active', command=self.set_annotations_file).pack(anchor=tk.W)
-        tk.Button(master=annotations_popup, text='Remove', command=self.remove_annotations_file).pack(anchor=tk.W)
+        tk.Button(master=popup_window, text='Set as active', command=self.set_annotations_file).pack(in_=popup_window_bottom_bottom, side=tk.LEFT)
+        tk.Button(master=popup_window, text='Remove', command=self.remove_annotations_file).pack(in_=popup_window_bottom_bottom, side=tk.RIGHT)
 
     def refresh_file_preview(self):
         self.annotations_file_content.config(state=tk.NORMAL)
