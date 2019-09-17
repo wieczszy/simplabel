@@ -235,22 +235,22 @@ class SimplabelGUI():
         self.annotations_file = self.selected_annotations_file.get()
 
     def edit_annotations(self):
-        self.annotations_popup = tk.Toplevel()
-        self.annotations_popup.title('Edit annotations files')
-        self.annotations_popup.geometry("300x240")
+        annotations_popup = tk.Toplevel()
+        annotations_popup.title('Edit annotations files')
+        annotations_popup.geometry("300x240")
 
-        tk.Label(self.annotations_popup, text='Enter filename (without extension).').pack(anchor=tk.W)
+        tk.Label(annotations_popup, text='Enter filename (without extension).').pack(anchor=tk.W)
         v = tk.StringVar()
-        self.new_annotations_entry = tk.Entry(master=self.annotations_popup, textvariable=v)
+        self.new_annotations_entry = tk.Entry(master=annotations_popup, textvariable=v)
         self.new_annotations_entry.pack(anchor=tk.W)
-        tk.Button(master=self.annotations_popup, text='Create file', command=self.create_annotations_file).pack(anchor=tk.W)
+        tk.Button(master=annotations_popup, text='Create file', command=self.create_annotations_file).pack(anchor=tk.W)
 
-        tk.Label(self.annotations_popup, text='Select annotations file').pack(anchor=tk.W)
-        self.file_select_menu = tk.OptionMenu(self.annotations_popup, self.selected_annotations_file, *self.annotations_files)
+        tk.Label(annotations_popup, text='Select annotations file').pack(anchor=tk.W)
+        self.file_select_menu = tk.OptionMenu(annotations_popup, self.selected_annotations_file, *self.annotations_files)
         self.file_select_menu.pack(anchor=tk.W)
 
-        tk.Button(master=self.annotations_popup, text='Set as active', command=self.set_annotations_file).pack(anchor=tk.W)
-        tk.Button(master=self.annotations_popup, text='Remove', command=self.remove_annotations_file).pack(anchor=tk.W)
+        tk.Button(master=annotations_popup, text='Set as active', command=self.set_annotations_file).pack(anchor=tk.W)
+        tk.Button(master=annotations_popup, text='Remove', command=self.remove_annotations_file).pack(anchor=tk.W)
 
     def refresh_file_preview(self):
         self.annotations_file_content.config(state=tk.NORMAL)
@@ -260,19 +260,19 @@ class SimplabelGUI():
         self.annotations_file_content.config(state=tk.DISABLED)
 
     def show_annotations(self):
-        self.annotations_content_popup = tk.Toplevel()
-        self.annotations_content_popup.title('Annotations')
-        self.annotations_content_popup_top = tk.Frame(self.annotations_content_popup)
-        self.annotations_content_popup_bottom = tk.Frame(self.annotations_content_popup)
-        self.annotations_content_popup_top.pack(side=tk.TOP, anchor=tk.W)
-        self.annotations_content_popup_bottom.pack(side=tk.BOTTOM)
+        annotations_content_popup = tk.Toplevel()
+        annotations_content_popup.title('Annotations')
+        annotations_content_popup_top = tk.Frame(annotations_content_popup)
+        annotations_content_popup_bottom = tk.Frame(annotations_content_popup)
+        annotations_content_popup_top.pack(side=tk.TOP, anchor=tk.W)
+        annotations_content_popup_bottom.pack(side=tk.BOTTOM)
 
-        tk.Label(master=self.annotations_content_popup, text='Select file').pack(in_=self.annotations_content_popup_top, side=tk.TOP)
-        file_select_menu = tk.OptionMenu(self.annotations_content_popup, self.selected_annotations_file, *self.annotations_files)
-        file_select_menu.pack(in_=self.annotations_content_popup_top, side=tk.LEFT)
-        refresh_file_button = tk.Button(master=self.annotations_content_popup, text="Select", command=self.refresh_file_preview)
-        refresh_file_button.pack(in_=self.annotations_content_popup_top, side=tk.LEFT)
+        tk.Label(master=annotations_content_popup, text='Select file').pack(in_=annotations_content_popup_top, side=tk.TOP)
+        file_select_menu = tk.OptionMenu(annotations_content_popup, self.selected_annotations_file, *self.annotations_files)
+        file_select_menu.pack(in_=annotations_content_popup_top, side=tk.LEFT)
+        refresh_file_button = tk.Button(master=annotations_content_popup, text="Select", command=self.refresh_file_preview)
+        refresh_file_button.pack(in_=annotations_content_popup_top, side=tk.LEFT)
 
-        self.annotations_file_content = tk.Text(master=self.annotations_content_popup)
-        self.annotations_file_content.pack(in_=self.annotations_content_popup_bottom, side=tk.TOP)
+        self.annotations_file_content = tk.Text(master=annotations_content_popup)
+        self.annotations_file_content.pack(in_=annotations_content_popup_bottom, side=tk.TOP)
         self.refresh_file_preview()
