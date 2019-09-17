@@ -212,6 +212,7 @@ class SimplabelGUI():
                 for file in self.annotations_files:
                     self.file_select_menu.children["menu"].add_command(label=file, command=lambda option=file: self.selected_annotations_file.set(file))
                 self.selected_annotations_file.set(file)
+                self.new_annotations_entry.config(textvariable=tk.StringVar())
             else:
                 logging.error("File already exists.")
                 messagebox.showerror("Error", "File already exists!")
