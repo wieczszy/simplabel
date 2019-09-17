@@ -4,21 +4,11 @@ Simple tool that lets you assign images to classes of your choice. Results are s
 ![example](https://i.imgur.com/T8Ff69j.png)
 
 ## Usage
-Set directories, classes and size of the image in the preview according to your needs in `config.ini`. Example:
-```
-[DIRS]
-images_dir = data/images
-answers_file = data/answers.csv
-
-[ANNOTATION]
-classes = amusement, anger, awe, contentment, disgust, excitement, fear, sadness
-
-[IMAGES]
-size = 500,500
-```
 Install requirements (it's `PIL` only, the rest should come by default with Python): `pip install -r requirements.txt`.
 
-Then run the app with `python app.py`. Annotations are saved in the file specified in the config. When starting, the app checks whether the image have been already annotated so you don't have to annotate all images at once as long as you keep the same results file. Example files are provided in the repo. 
+Then run the app with `python app.py`. When starting, the app checks whether the image have been already annotated so you don't have to annotate all images at once as long as you keep the same results file.
+
+Selecting images' directory, changing classes and other options are available in the menu.
 
 ## tkinter error
 If you get the error: `ImportError: No module named 'tkinter'` on Linux then try:
