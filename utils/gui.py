@@ -178,7 +178,7 @@ class SimplabelGUI():
     def change_im_size(self):
         self.size_popup = tk.Toplevel()
         self.size_popup.title('Image preview size')
-        self.size_popup.geometry("250x150")
+        self.size_popup.geometry("250x130")
         w = tk.StringVar()
         h = tk.StringVar()
         tk.Label(self.size_popup, text='Width').pack(anchor=tk.W)
