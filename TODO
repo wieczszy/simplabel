@@ -1,10 +1,15 @@
 
 Todo - code:
   ☐ Handle the exception when there are non image files in the selected image directory.
-  ☐ Add option to display annotations in a separate window inside the app.
+  ✔ Add option to display annotations in a separate window inside the app. @done(19-09-17 12:58)
   ☐ Improve the design of the "edit annotations file" popup window.
-  ☐ Move the config file away from the users view.
+  ✘ Move the config file away from the users view. @cancelled(19-09-17 13:26)
+    The config file will stay in the main directory of the project. There is no reason to store it somwhere else.
   ☐ Write docstrings.
+  ✔ Clear entry field when a new annotations file is created. @done(19-09-17 13:22)
+  ✔ Diable the main window hiding when selecting the images directory. @done(19-09-17 14:05)
+  ✔ Change the size of the preview size control popup window. @done(19-09-17 14:08)
+  ☐ Fix the bug that makes it impossible to change the file selection in the menu after adding or removing a file.
 
 Todo - repo:
   ☐ Update README.
