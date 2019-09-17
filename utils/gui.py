@@ -125,25 +125,25 @@ class SimplabelGUI():
             pass
 
     def edit_classes(self):
-        self.classes_popup = tk.Toplevel()
-        self.classes_popup_top = tk.Frame(self.classes_popup)
-        self.classes_popup_bottom = tk.Frame(self.classes_popup)
-        self.classes_popup_top.pack(side=tk.TOP)
+        classes_popup = tk.Toplevel()
+        classes_popup_top = tk.Frame(classes_popup)
+        self.classes_popup_bottom = tk.Frame(classes_popup)
+        classes_popup_top.pack(side=tk.TOP)
         self.classes_popup_bottom.pack(side=tk.BOTTOM)
-        self.classes_popup.title('Edit classes')
+        classes_popup.title('Edit classes')
 
-        u = tk.Button(self.classes_popup, text="Update", command=self.update_classes)
-        a = tk.Button(self.classes_popup, text="Add class", command=self.add_class)
-        r = tk.Button(self.classes_popup, text="Remove class", command=self.remove_class)
-        u.pack(in_=self.classes_popup_top, side=tk.LEFT)
-        a.pack(in_=self.classes_popup_top, side=tk.LEFT)
-        r.pack(in_=self.classes_popup_top, side=tk.LEFT)
+        u = tk.Button(classes_popup, text="Update", command=self.update_classes)
+        a = tk.Button(classes_popup, text="Add class", command=self.add_class)
+        r = tk.Button(classes_popup, text="Remove class", command=self.remove_class)
+        u.pack(in_=classes_popup_top, side=tk.LEFT)
+        a.pack(in_=classes_popup_top, side=tk.LEFT)
+        r.pack(in_=classes_popup_top, side=tk.LEFT)
 
-        self.class_entry_values = [tk.StringVar(self.classes_popup, value=class_name) for class_name in self.classes]
+        self.class_entry_values = [tk.StringVar(classes_popup, value=class_name) for class_name in self.classes]
         self.edit_class_entries = []
 
         for i in range(len(self.classes)):
-            e = tk.Entry(master=self.classes_popup, textvariable=self.class_entry_values[i])
+            e = tk.Entry(master=classes_popup, textvariable=self.class_entry_values[i])
             e.pack(in_=self.classes_popup_bottom, anchor=tk.W)
             self.edit_class_entries.append(e)
 
@@ -176,18 +176,18 @@ class SimplabelGUI():
             messagebox.showerror('Error', 'There are no classes to remove!')
 
     def change_im_size(self):
-        self.size_popup = tk.Toplevel()
-        self.size_popup.title('Image preview size')
-        self.size_popup.geometry("250x130")
+        size_popup = tk.Toplevel()
+        size_popup.title('Image preview size')
+        size_popup.geometry("250x130")
         w = tk.StringVar()
         h = tk.StringVar()
-        tk.Label(self.size_popup, text='Width').pack(anchor=tk.W)
-        self.new_width = tk.Entry(self.size_popup, textvariable=w)
+        tk.Label(size_popup, text='Width').pack(anchor=tk.W)
+        self.new_width = tk.Entry(size_popup, textvariable=w)
         self.new_width.pack(anchor=tk.W)
-        tk.Label(self.size_popup, text='Heigth').pack(anchor=tk.W)
-        self.new_height = tk.Entry(self.size_popup, textvariable=h)
+        tk.Label(size_popup, text='Heigth').pack(anchor=tk.W)
+        self.new_height = tk.Entry(size_popup, textvariable=h)
         self.new_height.pack(anchor=tk.W)
-        tk.Button(self.size_popup, text='Submit', command=self.update_im_size).pack(anchor=tk.W)
+        tk.Button(size_popup, text='Submit', command=self.update_im_size).pack(anchor=tk.W)
 
     def update_im_size(self):
         try:
@@ -271,19 +271,19 @@ class SimplabelGUI():
         self.annotations_file_content.config(state=tk.DISABLED)
 
     def show_annotations(self):
-        annotations_content_popup = tk.Toplevel()
-        annotations_content_popup.title('Annotations')
-        annotations_content_popup_top = tk.Frame(annotations_content_popup)
-        annotations_content_popup_bottom = tk.Frame(annotations_content_popup)
-        annotations_content_popup_top.pack(side=tk.TOP, anchor=tk.W)
-        annotations_content_popup_bottom.pack(side=tk.BOTTOM)
+        popup_window = tk.Toplevel()
+        popup_window.title('Annotations')
+        popupwindow_top = tk.Frame(popup_window)
+        popup_window_bottom = tk.Frame(popup_window)
+        popupwindow_top.pack(side=tk.TOP, anchor=tk.W)
+        popup_window_bottom.pack(side=tk.BOTTOM)
 
-        tk.Label(master=annotations_content_popup, text='Select file').pack(in_=annotations_content_popup_top, side=tk.TOP)
-        file_select_menu = tk.OptionMenu(annotations_content_popup, self.selected_annotations_file, *self.annotations_files)
-        file_select_menu.pack(in_=annotations_content_popup_top, side=tk.LEFT)
-        refresh_file_button = tk.Button(master=annotations_content_popup, text="Select", command=self.refresh_file_preview)
-        refresh_file_button.pack(in_=annotations_content_popup_top, side=tk.LEFT)
+        tk.Label(master=popup_window, text='Select file').pack(in_=popupwindow_top, side=tk.TOP)
+        annotations_select_menu = tk.OptionMenu(popup_window, self.selected_annotations_file, *self.annotations_files)
+        annotations_select_menu.pack(in_=popupwindow_top, side=tk.LEFT)
+        refresh_file_button = tk.Button(master=popup_window, text="Select", command=self.refresh_file_preview)
+        refresh_file_button.pack(in_=popupwindow_top, side=tk.LEFT)
 
-        self.annotations_file_content = tk.Text(master=annotations_content_popup)
-        self.annotations_file_content.pack(in_=annotations_content_popup_bottom, side=tk.TOP)
+        self.annotations_file_content = tk.Text(master=popup_window)
+        self.annotations_file_content.pack(in_=popup_window_bottom, side=tk.TOP)
         self.refresh_file_preview()
