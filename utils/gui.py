@@ -257,7 +257,7 @@ class SimplabelGUI():
         self.new_annotations_entry.pack(in_=popup_window_top, anchor=tk.W)
         tk.Button(master=popup_window, text='Create file', command=self.create_annotations_file).pack(in_=popup_window_top, side=tk.LEFT)
 
-        tk.Label(popup_window, text='Select annotations file').pack(in_=popup_window_bottom_top, anchor=tk.W)
+        tk.Label(popup_window, text='Select annotations file to use').pack(in_=popup_window_bottom_top, anchor=tk.W)
         self.file_select_menu = tk.OptionMenu(popup_window, self.active_annotations_file, *self.annotations_files)
         self.file_select_menu.config(width=300)
         self.file_select_menu.pack(in_=popup_window_bottom_top, side=tk.LEFT)
@@ -268,7 +268,7 @@ class SimplabelGUI():
     def refresh_file_preview(self):
         self.annotations_file_content.config(state=tk.NORMAL)
         self.annotations_file_content.delete('1.0', tk.END)
-        with open(self.active_annotations_file.get()) as f:
+        with open(self.annotations_file_to_preview.get()) as f:
             self.annotations_file_content.insert(tk.END, f.read())
         self.annotations_file_content.config(state=tk.DISABLED)
 
@@ -281,7 +281,9 @@ class SimplabelGUI():
         popup_window_bottom.pack(side=tk.TOP)
 
         tk.Label(master=popup_window, text='Select file').pack(in_=popupwindow_top, side=tk.TOP)
-        annotations_select_menu = tk.OptionMenu(popup_window, self.active_annotations_file, *self.annotations_files)
+        self.annotations_file_to_preview = tk.StringVar()
+        self.annotations_file_to_preview.set(self.active_annotations_file.get())
+        annotations_select_menu = tk.OptionMenu(popup_window, self.annotations_file_to_preview, *self.annotations_files)
         annotations_select_menu.pack(in_=popupwindow_top, side=tk.LEFT)
         refresh_file_button = tk.Button(master=popup_window, text="Select", command=self.refresh_file_preview)
         refresh_file_button.pack(in_=popupwindow_top, side=tk.LEFT)
