@@ -284,6 +284,12 @@ class SimplabelGUI():
         refresh_file_button = tk.Button(master=popup_window, text="Select", command=self.refresh_file_preview)
         refresh_file_button.pack(in_=popupwindow_top, side=tk.LEFT)
 
-        self.annotations_file_content = tk.Text(master=popup_window)
+        x_scrollbar = tk.Scrollbar(master=popup_window, orient=tk.HORIZONTAL, bg='#4C565E')
+        y_scrollbar = tk.Scrollbar(master=popup_window, orient=tk.VERTICAL, bg='#4C565E')
+        self.annotations_file_content = tk.Text(master=popup_window, wrap=tk.NONE, xscrollcommand=x_scrollbar.set, yscrollcommand=y_scrollbar.set)
+        x_scrollbar.config(command=self.annotations_file_content.xview)
+        y_scrollbar.config(command=self.annotations_file_content.yview)
+        x_scrollbar.pack(in_=popup_window_bottom, side=tk.BOTTOM, fill=tk.X)
+        y_scrollbar.pack(in_=popup_window_bottom, side=tk.RIGHT, fill=tk.Y)
         self.annotations_file_content.pack(in_=popup_window_bottom, side=tk.TOP, fill=tk.BOTH, expand=True)
         self.refresh_file_preview()
