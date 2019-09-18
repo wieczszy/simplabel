@@ -1,3 +1,4 @@
+import imghdr
 import os
 import logging
 from PIL import ImageTk, Image
@@ -14,7 +15,7 @@ class ImageTracker():
 
     def _get_imgs(self):
         all_imgs = [os.path.join(self.im_dir, im) for im in os.listdir(self.im_dir)]
-        all_imgs = [img for img in all_imgs if not os.path.isdir(img)]
+        all_imgs = [img for img in all_imgs if not os.path.isdir(img) and imghdr.what(img)]
 
         try:
             f = open(self.answers_file)
