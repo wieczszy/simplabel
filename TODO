@@ -4,7 +4,7 @@ Todo - code:
   ✔ Add option to display annotations in a separate window inside the app. @done(17-09-19 12:58)
   ✔ Improve the design of the "edit annotations file" popup window. @done(17-09-19 14:52s)
   ✘ Move the config file away from the users view. @cancelled(17-09-19 13:26)
-    The config file will stay in the main directory of the project. There is no reason to store it somwhere else.
+      The config file will stay in the main directory of the project. There is no reason to store it somwhere else.
   ☐ Write docstrings.
   ✔ Clear entry field when a new annotations file is created. @done(17-09-19 13:22)
   ✔ Diable the main window hiding when selecting the images directory. @done(17-09-19 14:05)
@@ -12,7 +12,8 @@ Todo - code:
   ✔ Fix the bug that makes it impossible to change the file selection in the menu after adding or removing a file. @done(18-09-19 13:53)
   ✔ Fix saving new class names - they are shown correctly in the app but saved to the annotations file as 'class1', 'class2' etc. @done(18-09-19 10:50)
   ✔ Fix the behaviuor of the text widged when expanding the annotations preview window. @done(18-09-19 11:05)
-  ☐ Annotations preview text widged does not scale horizontaly to the text and/or window size - check if that can be changed or add a scrollbar.
+  ✔ Annotations preview text widged does not scale horizontaly to the text and/or window size - check if that can be changed or add a scrollbar. @done(18-09-19 17:52)
+      Added scrollbars.
   ✔ Fix the process of creation new empty annotations file when there are no files in the data directory. @done(18-09-19 11:16)
       It leads to the bug with the `self.annotations_file` and `self.selected_annotations_file`.
   ✔ Fix the conflict between `self.annotations_file` and `self.selected_annotations_file`. @done(18-09-19 11:32)
