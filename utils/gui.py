@@ -14,16 +14,15 @@ class SimplabelGUI():
         self.it = it
 
         self.classes = self.config['ANNOTATION']['CLASSES'].split(',')
-        self.annotations_file = self.config['DIRS']['ANNOTATIONS_FILE']
+        self.default_annotations_file = self.config['DIRS']['ANNOTATIONS_FILE']
         self.annotations_files = [os.path.join('data', x) for x in os.listdir('data')]
-        print(self.annotations_files)
-        self.selected_annotations_file = tk.StringVar()
+        self.active_annotations_file = tk.StringVar()
 
         if not self.annotations_files:
-            open(self.annotations_file, 'a').close()
-            self.annotations_files.append(self.annotations_file)
+            open(self.default_annotations_file, 'a').close()
+            self.annotations_files.append(self.default_annotations_file)
 
-        self.selected_annotations_file.set(self.annotations_files[0])
+        self.active_annotations_file.set(self.annotations_files[0])
         self.size = tuple([int(x) for x in self.config['IMAGES']['SIZE'].split(',')])
         self.im_dir = self.config['DIRS']['IMAGES_DIR']
         self.is_im_dir_default = True
@@ -70,7 +69,7 @@ class SimplabelGUI():
         tk.Button(self.master, text="Exit", command=self.close_window).pack(in_=self.master_bottom, side=tk.LEFT)
 
     def refresh_image(self):
-        self.it = ImageTracker(self.im_dir, self.annotations_file, self.size)
+        self.it = ImageTracker(self.im_dir, self.active_annotations_file.get(), self.size)
         new_img = self.it.get_image()
         self.im_label.configure(image=new_img)
         self.im_label.image = new_img
@@ -90,7 +89,7 @@ class SimplabelGUI():
             messagebox.showerror("Error", "Select class!")
         else:
             print('{},{},{}'.format(self.e.get(), self.it.get_filename(), self.v.get()))
-            with open(self.annotations_file, 'a') as f:
+            with open(self.active_annotations_file.get(), 'a') as f:
                 f.write('{},{},{}\n'.format(self.e.get(), self.it.get_filename(), self.v.get()))
             try:
                 self.it.update_index()
@@ -211,8 +210,8 @@ class SimplabelGUI():
                 self.annotations_files.append(new_annotations_file)
                 self.file_select_menu.children['menu'].delete(0, "end")
                 for file in self.annotations_files:
-                    self.file_select_menu.children["menu"].add_command(label=file, command=lambda option=file: self.selected_annotations_file.set(file))
-                self.selected_annotations_file.set(file)
+                    self.file_select_menu.children["menu"].add_command(label=file, command=lambda option=file: self.active_annotations_file.set(file))
+                self.active_annotations_file.set(file)
                 self.new_annotations_entry.config(textvariable=tk.StringVar())
             else:
                 logging.error("File already exists.")
@@ -220,21 +219,21 @@ class SimplabelGUI():
 
     def remove_annotations_file(self):
         try:
-            os.remove(self.selected_annotations_file.get())
-            self.annotations_files.remove(self.selected_annotations_file.get())
+            os.remove(self.active_annotations_file.get())
+            self.annotations_files.remove(self.active_annotations_file.get())
             self.file_select_menu.children['menu'].delete(0, "end")
             for file in self.annotations_files:
-                self.file_select_menu.children["menu"].add_command(label=file, command=lambda option=file: self.selected_annotations_file.set(file))
+                self.file_select_menu.children["menu"].add_command(label=file, command=lambda option=file: self.active_annotations_file.set(file))
             if not self.annotations_files:
-                self.selected_annotations_file.set('   ')
+                self.active_annotations_file.set('   ')
             else:
-                self.selected_annotations_file.set(self.annotations_files[0])
+                self.active_annotations_file.set(self.annotations_files[0])
         except FileNotFoundError:
             logging.error('File not found.')
             messagebox.showerror('Error', 'File not found!')
 
     def set_annotations_file(self):
-        self.annotations_file = self.selected_annotations_file.get()
+        self.annotations_file = self.active_annotations_file.get()
 
     def edit_annotations(self):
         popup_window = tk.Toplevel()
@@ -259,7 +258,7 @@ class SimplabelGUI():
         tk.Button(master=popup_window, text='Create file', command=self.create_annotations_file).pack(in_=popup_window_top, side=tk.LEFT)
 
         tk.Label(popup_window, text='Select annotations file').pack(in_=popup_window_bottom_top, anchor=tk.W)
-        self.file_select_menu = tk.OptionMenu(popup_window, self.selected_annotations_file, *self.annotations_files)
+        self.file_select_menu = tk.OptionMenu(popup_window, self.active_annotations_file, *self.annotations_files)
         self.file_select_menu.config(width=300)
         self.file_select_menu.pack(in_=popup_window_bottom_top, side=tk.LEFT)
 
@@ -269,7 +268,7 @@ class SimplabelGUI():
     def refresh_file_preview(self):
         self.annotations_file_content.config(state=tk.NORMAL)
         self.annotations_file_content.delete('1.0', tk.END)
-        with open(self.selected_annotations_file.get()) as f:
+        with open(self.active_annotations_file.get()) as f:
             self.annotations_file_content.insert(tk.END, f.read())
         self.annotations_file_content.config(state=tk.DISABLED)
 
@@ -282,7 +281,7 @@ class SimplabelGUI():
         popup_window_bottom.pack(side=tk.TOP)
 
         tk.Label(master=popup_window, text='Select file').pack(in_=popupwindow_top, side=tk.TOP)
-        annotations_select_menu = tk.OptionMenu(popup_window, self.selected_annotations_file, *self.annotations_files)
+        annotations_select_menu = tk.OptionMenu(popup_window, self.active_annotations_file, *self.annotations_files)
         annotations_select_menu.pack(in_=popupwindow_top, side=tk.LEFT)
         refresh_file_button = tk.Button(master=popup_window, text="Select", command=self.refresh_file_preview)
         refresh_file_button.pack(in_=popupwindow_top, side=tk.LEFT)
