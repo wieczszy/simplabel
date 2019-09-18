@@ -16,14 +16,17 @@ class SimplabelGUI():
         self.classes = self.config['ANNOTATION']['CLASSES'].split(',')
         self.annotations_file = self.config['DIRS']['ANNOTATIONS_FILE']
         self.annotations_files = [os.path.join('data', x) for x in os.listdir('data')]
+        print(self.annotations_files)
         self.selected_annotations_file = tk.StringVar()
+
+        if not self.annotations_files:
+            open(self.annotations_file, 'a').close()
+            self.annotations_files.append(self.annotations_file)
+
         self.selected_annotations_file.set(self.annotations_files[0])
         self.size = tuple([int(x) for x in self.config['IMAGES']['SIZE'].split(',')])
         self.im_dir = self.config['DIRS']['IMAGES_DIR']
         self.is_im_dir_default = True
-
-        if not os.path.exists(self.annotations_file):
-            open(self.annotations_file, 'a').close()
 
         self.master.title("simplabel")
         self.master_top = tk.Frame(self.master)
