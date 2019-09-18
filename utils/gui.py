@@ -150,7 +150,7 @@ class SimplabelGUI():
     def update_classes(self):
         for i in range(len(self.classes)):
             self.classes[i] = self.class_entry_values[i].get()
-            self.radio_buttons[i].config(text=self.classes[i])
+            self.radio_buttons[i].config(text=self.classes[i], value=self.classes[i])
 
     def add_class(self):
         v = tk.StringVar(value="New class")
