@@ -276,7 +276,7 @@ class SimplabelGUI():
         popupwindow_top = tk.Frame(popup_window)
         popup_window_bottom = tk.Frame(popup_window)
         popupwindow_top.pack(side=tk.TOP, anchor=tk.W)
-        popup_window_bottom.pack(side=tk.BOTTOM)
+        popup_window_bottom.pack(side=tk.TOP)
 
         tk.Label(master=popup_window, text='Select file').pack(in_=popupwindow_top, side=tk.TOP)
         annotations_select_menu = tk.OptionMenu(popup_window, self.selected_annotations_file, *self.annotations_files)
@@ -285,5 +285,5 @@ class SimplabelGUI():
         refresh_file_button.pack(in_=popupwindow_top, side=tk.LEFT)
 
         self.annotations_file_content = tk.Text(master=popup_window)
-        self.annotations_file_content.pack(in_=popup_window_bottom, side=tk.TOP)
+        self.annotations_file_content.pack(in_=popup_window_bottom, side=tk.TOP, fill=tk.BOTH, expand=True)
         self.refresh_file_preview()
