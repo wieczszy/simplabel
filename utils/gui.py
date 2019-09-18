@@ -210,7 +210,7 @@ class SimplabelGUI():
                 self.annotations_files.append(new_annotations_file)
                 self.file_select_menu.children['menu'].delete(0, "end")
                 for file in self.annotations_files:
-                    self.file_select_menu.children["menu"].add_command(label=file, command=lambda option=file: self.active_annotations_file.set(file))
+                    self.file_select_menu.children["menu"].add_command(label=file, command=lambda option=file: self.active_annotations_file.set(option))
                 self.active_annotations_file.set(file)
                 self.new_annotations_entry.config(textvariable=tk.StringVar())
             else:
@@ -223,7 +223,7 @@ class SimplabelGUI():
             self.annotations_files.remove(self.active_annotations_file.get())
             self.file_select_menu.children['menu'].delete(0, "end")
             for file in self.annotations_files:
-                self.file_select_menu.children["menu"].add_command(label=file, command=lambda option=file: self.active_annotations_file.set(file))
+                self.file_select_menu.children["menu"].add_command(label=file, command=lambda option=file: self.active_annotations_file.set(option))
             if not self.annotations_files:
                 self.active_annotations_file.set('   ')
             else:
