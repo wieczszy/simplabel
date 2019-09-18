@@ -63,7 +63,7 @@ class SimplabelGUI():
         for button in self.radio_buttons:
             button.pack(anchor=tk.W)
 
-        tk.Button(self.master, text="Submit", command=self.callback).pack(in_=self.master_bottom, side=tk.LEFT)
+        tk.Button(self.master, text="Submit", command=self.submit_annotation).pack(in_=self.master_bottom, side=tk.LEFT)
         tk.Button(self.master, text="Exit", command=self.close_window).pack(in_=self.master_bottom, side=tk.LEFT)
 
     def refresh_image(self):
@@ -72,7 +72,7 @@ class SimplabelGUI():
         self.im_label.configure(image=new_img)
         self.im_label.image = new_img
 
-    def callback(self):
+    def submit_annotation(self):
         if self.is_im_dir_default:
             logging.error("Images directory has not been selected.")
             messagebox.showerror("Error", "Images directory has not been selected!")
