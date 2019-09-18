@@ -232,9 +232,6 @@ class SimplabelGUI():
             logging.error('File not found.')
             messagebox.showerror('Error', 'File not found!')
 
-    def set_annotations_file(self):
-        self.annotations_file = self.active_annotations_file.get()
-
     def edit_annotations(self):
         popup_window = tk.Toplevel()
         popup_window.title('Edit annotations files')
@@ -262,7 +259,6 @@ class SimplabelGUI():
         self.file_select_menu.config(width=300)
         self.file_select_menu.pack(in_=popup_window_bottom_top, side=tk.LEFT)
 
-        tk.Button(master=popup_window, text='Set as active', command=self.set_annotations_file).pack(in_=popup_window_bottom_bottom, side=tk.LEFT)
         tk.Button(master=popup_window, text='Remove', command=self.remove_annotations_file).pack(in_=popup_window_bottom_bottom, side=tk.RIGHT)
 
     def refresh_file_preview(self):
