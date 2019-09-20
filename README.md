@@ -1,7 +1,7 @@
 # simplabel
 Simple tool that lets you assign images to classes of your choice. Results are saved in a CSV file. Hacked together for my own use so may not work the best. Built with `tkinter`, `pillow` and `Python 3.6.8`.  
 
-![example](https://i.imgur.com/PWYx8q5.png)
+![example](https://i.imgur.com/TXBP4dc.png)
 
 ## Usage
 Install requirements (it's `PIL` only, the rest should come by default with Python): `pip install -r requirements.txt`.
