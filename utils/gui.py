@@ -17,6 +17,7 @@ class SimplabelGUI():
         self.default_annotations_file = self.config['DIRS']['ANNOTATIONS_FILE']
         self.annotations_files = [os.path.join('data', x) for x in os.listdir('data')]
         self.active_annotations_file = tk.StringVar()
+        self.annotator_id_entry_state = 1
 
         if not self.annotations_files:
             open(self.default_annotations_file, 'a').close()
@@ -50,8 +51,11 @@ class SimplabelGUI():
         sub_menu.add_command(label='Show annotations', command=self.show_annotations)
 
         tk.Label(self.master, text="Annotator ID:").pack(in_=self.master_top, side=tk.LEFT)
-        tk.Entry(textvariable=self.e).pack(in_=self.master_top, side=tk.LEFT)
-        tk.Label(self.master, text="Select the class that describes the image the best.").pack(anchor=tk.W)
+        self.annotator_id_entry = tk.Entry(textvariable=self.e)
+        self.annotator_id_entry.pack(in_=self.master_top, side=tk.LEFT)
+        self.annotator_id_button = tk.Button(self.master, text="Set ID", command=self.toggle_entry_state)
+        self.annotator_id_button.pack(in_=self.master_top, side=tk.LEFT)
+        tk.Label(self.master, text="Select classes according to your task description.").pack(anchor=tk.W)
 
         self.im_label = tk.Label(self.master, image=self.img)
         self.im_label.pack(anchor=tk.W)
@@ -67,6 +71,27 @@ class SimplabelGUI():
 
         tk.Button(self.master, text="Submit", command=self.submit_annotation).pack(in_=self.master_bottom, side=tk.LEFT)
         tk.Button(self.master, text="Exit", command=self.close_window).pack(in_=self.master_bottom, side=tk.LEFT)
+
+        for i in range(1, len(self.classes) + 1):
+            self.master.bind(f"{i}", lambda i: self.annotate_by_key(i))
+
+    def annotate_by_key(self, i):
+        if self.annotator_id_entry_state:
+            # messagebox.showerror("Error", "Set Annotator ID to use key-shortcuts.")
+            pass
+        else:
+            self.v.set(self.classes[int(i.char) - 1])
+            self.submit_annotation()
+
+    def toggle_entry_state(self):
+        if self.annotator_id_entry_state:
+            self.annotator_id_entry.config(state=tk.DISABLED)
+            self.annotator_id_entry_state = 0
+            self.annotator_id_button.config(text="Change ID")
+        else:
+            self.annotator_id_entry.config(state=tk.NORMAL)
+            self.annotator_id_entry_state = 1
+            self.annotator_id_button.config(text="Set ID")
 
     def refresh_image(self):
         self.it = ImageTracker(self.im_dir, self.active_annotations_file.get(), self.size)
@@ -97,8 +122,8 @@ class SimplabelGUI():
                 self.im_label.configure(image=new_img)
                 self.im_label.image = new_img
             except IndexError:
-                logging.error("There is no more images to annotate.")
-                messagebox.showinfo("You're done!", "The is no more images.")
+                logging.error("All images have been annotated.")
+                messagebox.showinfo("You're done!", "All images have been annotated!.")
                 self.im_dir = self.config['DIRS']['IMAGES_DIR']
                 self.is_im_dir_default = True
                 self.refresh_image()
@@ -153,6 +178,10 @@ class SimplabelGUI():
         for i in range(len(self.classes)):
             self.classes[i] = self.class_entry_values[i].get()
             self.radio_buttons[i].config(text=self.classes[i], value=self.classes[i])
+        for i in range(1, len(self.classes) + 1):
+            self.master.bind(f"{i}", lambda i: self.annotate_by_key(i))
+        if len(self.classes) > 9:
+            messagebox.showinfo("Key shortcuts", "Remember that only 9 classes are supported by key shortcuts. You can still use radiobuttons for the rest.")
 
     def add_class(self):
         v = tk.StringVar(value="New class")
