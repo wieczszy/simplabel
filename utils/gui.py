@@ -17,6 +17,7 @@ class SimplabelGUI():
         self.default_annotations_file = self.config['DIRS']['ANNOTATIONS_FILE']
         self.annotations_files = [os.path.join('data', x) for x in os.listdir('data')]
         self.active_annotations_file = tk.StringVar()
+        self.annotator_id_entry_state = 1
 
         if not self.annotations_files:
             open(self.default_annotations_file, 'a').close()
@@ -50,7 +51,9 @@ class SimplabelGUI():
         sub_menu.add_command(label='Show annotations', command=self.show_annotations)
 
         tk.Label(self.master, text="Annotator ID:").pack(in_=self.master_top, side=tk.LEFT)
-        tk.Entry(textvariable=self.e).pack(in_=self.master_top, side=tk.LEFT)
+        self.annotator_id_entry = tk.Entry(textvariable=self.e)
+        self.annotator_id_entry.pack(in_=self.master_top, side=tk.LEFT)
+        tk.Button(self.master, text="test_toggle", command=self.toggle_entry_state).pack(in_=self.master_top, side=tk.LEFT)
         tk.Label(self.master, text="Select the class that describes the image the best.").pack(anchor=tk.W)
 
         self.im_label = tk.Label(self.master, image=self.img)
@@ -65,8 +68,19 @@ class SimplabelGUI():
         for button in self.radio_buttons:
             button.pack(anchor=tk.W)
 
+        for i in range(len(self.radio_buttons)):
+            button.bind(f"<{i}>")
+
         tk.Button(self.master, text="Submit", command=self.submit_annotation).pack(in_=self.master_bottom, side=tk.LEFT)
         tk.Button(self.master, text="Exit", command=self.close_window).pack(in_=self.master_bottom, side=tk.LEFT)
+
+    def toggle_entry_state(self):
+        if self.annotator_id_entry_state:
+            self.annotator_id_entry.config(state=tk.DISABLED)
+            self.annotator_id_entry_state = 0
+        else:
+            self.annotator_id_entry.config(state=tk.NORMAL)
+            self.annotator_id_entry_state = 1
 
     def refresh_image(self):
         self.it = ImageTracker(self.im_dir, self.active_annotations_file.get(), self.size)
