@@ -55,7 +55,7 @@ class SimplabelGUI():
         self.annotator_id_entry.pack(in_=self.master_top, side=tk.LEFT)
         self.annotator_id_button = tk.Button(self.master, text="Set ID", command=self.toggle_entry_state)
         self.annotator_id_button.pack(in_=self.master_top, side=tk.LEFT)
-        tk.Label(self.master, text="Select the class that describes the image the best.").pack(anchor=tk.W)
+        tk.Label(self.master, text="Select classes according to your task description.").pack(anchor=tk.W)
 
         self.im_label = tk.Label(self.master, image=self.img)
         self.im_label.pack(anchor=tk.W)
@@ -121,8 +121,8 @@ class SimplabelGUI():
                 self.im_label.configure(image=new_img)
                 self.im_label.image = new_img
             except IndexError:
-                logging.error("There is no more images to annotate.")
-                messagebox.showinfo("You're done!", "The is no more images.")
+                logging.error("All images have been annotated.")
+                messagebox.showinfo("You're done!", "All images have been annotated!.")
                 self.im_dir = self.config['DIRS']['IMAGES_DIR']
                 self.is_im_dir_default = True
                 self.refresh_image()
