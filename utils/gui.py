@@ -77,7 +77,8 @@ class SimplabelGUI():
 
     def annotate_by_key(self, i):
         if self.annotator_id_entry_state:
-            messagebox.showerror("Error", "Set Annotator ID to use key-shortcuts.")
+            # messagebox.showerror("Error", "Set Annotator ID to use key-shortcuts.")
+            pass
         else:
             self.v.set(self.classes[int(i.char) - 1])
             self.submit_annotation()
