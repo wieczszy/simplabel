@@ -39,7 +39,10 @@ class SimplabelGUI():
         self.master_top.pack(side=tk.TOP, anchor=tk.W)
         self.master_bottom.pack(side=tk.BOTTOM)
 
-        self.img = self.it.get_image()
+        self.resize = tk.BooleanVar()
+        self.resize.set(False)
+
+        self.img = self.it.get_image(self.resize.get())
 
         self.v = tk.StringVar()
         self.e = tk.StringVar()
@@ -101,7 +104,7 @@ class SimplabelGUI():
 
     def refresh_image(self):
         self.it = ImageTracker(self.im_dir, self.active_annotations_file.get(), self.size)
-        new_img = self.it.get_image()
+        new_img = self.it.get_image(self.resize.get())
         self.im_label.configure(image=new_img)
         self.im_label.image = new_img
 
@@ -124,7 +127,7 @@ class SimplabelGUI():
                 f.write('{},{},{}\n'.format(self.e.get(), self.it.get_filename(), self.v.get()))
             try:
                 self.it.update_index()
-                new_img = self.it.get_image()
+                new_img = self.it.get_image(self.resize.get())
                 self.im_label.configure(image=new_img)
                 self.im_label.image = new_img
             except IndexError:
@@ -216,9 +219,10 @@ class SimplabelGUI():
     def change_im_size(self):
         size_popup = tk.Toplevel()
         size_popup.title('Image preview size')
-        size_popup.geometry("250x130")
+        size_popup.geometry("250x180")
         w = tk.StringVar()
         h = tk.StringVar()
+        tk.Checkbutton(size_popup, text='Resize images', variable=self.resize, onvalue=True, offvalue=False).pack(anchor=tk.W)
         tk.Label(size_popup, text='Width').pack(anchor=tk.W)
         self.new_width = tk.Entry(size_popup, textvariable=w)
         self.new_width.pack(anchor=tk.W)
@@ -226,14 +230,22 @@ class SimplabelGUI():
         self.new_height = tk.Entry(size_popup, textvariable=h)
         self.new_height.pack(anchor=tk.W)
         tk.Button(size_popup, text='Submit', command=self.update_im_size).pack(anchor=tk.W)
+        tk.Button(size_popup, text='Reset', command=self.reset_resizing).pack(anchor=tk.W)
 
     def update_im_size(self):
-        try:
-            self.size = (int(self.new_width.get()), int(self.new_height.get()))
-            self.refresh_image()
-        except ValueError:
-            logging.error('Invalid image size.')
-            messagebox.showerror('Error', 'Set valid image size!')
+        if self.resize.get():
+            try:
+                self.size = (int(self.new_width.get()), int(self.new_height.get()))
+                self.refresh_image()
+            except ValueError:
+                logging.error('Invalid image size.')
+                messagebox.showerror('Error', 'Set valid image size!')
+        else:
+            messagebox.showinfo('Resizing disabled', 'Enable resizing if you want to apply changes.')
+
+    def reset_resizing(self):
+        self.resize.set(False)
+        self.refresh_image()
 
     def create_annotations_file(self):
         if not self.new_annotations_entry.get():

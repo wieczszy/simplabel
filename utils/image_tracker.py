@@ -34,9 +34,10 @@ class ImageTracker():
     def update_index(self):
         self.index += 1
 
-    def get_image(self):
+    def get_image(self, resize):
         im_pil = Image.open(self.imgs[self.index])
-        im_pil = im_pil.resize(self.size, Image.ANTIALIAS)
+        if resize:
+            im_pil.thumbnail(self.size, Image.ANTIALIAS)
         return ImageTk.PhotoImage(im_pil)
 
     def get_filename(self):
