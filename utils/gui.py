@@ -62,8 +62,9 @@ class SimplabelGUI():
 
         self.radio_buttons = []
         for i in range(len(self.classes)):
+            button_label = f'[{i+1}] {self.classes[i]}'
             self.radio_buttons.append(tk.Radiobutton(self.master,
-                                                        text=self.classes[i],
+                                                        text=button_label,
                                                         variable=self.v,
                                                         value=self.classes[i]))
         for button in self.radio_buttons:
@@ -177,7 +178,8 @@ class SimplabelGUI():
     def update_classes(self):
         for i in range(len(self.classes)):
             self.classes[i] = self.class_entry_values[i].get()
-            self.radio_buttons[i].config(text=self.classes[i], value=self.classes[i])
+            button_label = f'[{i+1}] {self.classes[i]}'
+            self.radio_buttons[i].config(text=button_label, value=self.classes[i])
         for i in range(1, len(self.classes) + 1):
             self.master.bind(f"{i}", lambda i: self.annotate_by_key(i))
         if len(self.classes) > 9:
