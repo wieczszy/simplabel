@@ -13,6 +13,11 @@ class SimplabelGUI():
         self.config = config
         self.it = it
 
+        if os.name == 'nt':
+            self.master.state('zoomed')
+        else:
+            self.master.attributes('-zoomed', True)
+
         self.classes = self.config['ANNOTATION']['CLASSES'].split(',')
         self.default_annotations_file = self.config['DIRS']['ANNOTATIONS_FILE']
         self.annotations_files = [os.path.join('data', x) for x in os.listdir('data')]
