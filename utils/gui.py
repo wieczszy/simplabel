@@ -162,6 +162,7 @@ class SimplabelGUI():
 
     def edit_classes(self):
         classes_popup = tk.Toplevel()
+        classes_popup.attributes('-topmost', True)
         classes_popup_top = tk.Frame(classes_popup)
         self.classes_popup_bottom = tk.Frame(classes_popup)
         classes_popup_top.pack(side=tk.TOP)
@@ -218,6 +219,7 @@ class SimplabelGUI():
 
     def change_im_size(self):
         size_popup = tk.Toplevel()
+        size_popup.attributes('-topmost', True)
         size_popup.title('Image preview size')
         size_popup.geometry("250x180")
         w = tk.StringVar()
@@ -282,6 +284,7 @@ class SimplabelGUI():
 
     def edit_annotations(self):
         popup_window = tk.Toplevel()
+        popup_window.attributes('-topmost', True)
         popup_window.title('Edit annotations files')
         popup_window.geometry("300x180")
 
@@ -318,6 +321,7 @@ class SimplabelGUI():
 
     def show_annotations(self):
         popup_window = tk.Toplevel()
+        popup_window.attributes('-topmost', True)
         popup_window.title('Annotations')
         popupwindow_top = tk.Frame(popup_window)
         popup_window_bottom = tk.Frame(popup_window)
