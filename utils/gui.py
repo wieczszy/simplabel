@@ -30,7 +30,7 @@ class SimplabelGUI():
 
         self.active_annotations_file.set(self.annotations_files[0])
         self.size = tuple([int(x) for x in self.config['IMAGES']['SIZE'].split(',')])
-        self.im_dir = self.config['DIRS']['IMAGES_DIR']
+        self.im_dir = tk.StringVar(value=self.config['DIRS']['IMAGES_DIR'])
         self.is_im_dir_default = True
 
         self.master.title("simplabel")
@@ -40,12 +40,18 @@ class SimplabelGUI():
         self.master_bottom.pack(side=tk.BOTTOM)
 
         self.resize = tk.BooleanVar()
-        self.resize.set(False)
-
+        self.resize.set(True)
+        self.new_height = self.master.winfo_reqheight()
+        self.new_width = self.master.winfo_reqheight()
         self.img = self.it.get_image(self.resize.get())
 
         self.v = tk.StringVar()
         self.e = tk.StringVar()
+        self.m = tk.StringVar()
+        self.d = tk.StringVar()
+
+        self.m.set("Mode: selection")
+        self.d.set("Select classes according to your task description.")
 
         menu = tk.Menu(master)
         master.config(menu=menu)
@@ -63,10 +69,13 @@ class SimplabelGUI():
         self.annotator_id_entry.pack(in_=self.master_top, side=tk.LEFT)
         self.annotator_id_button = tk.Button(self.master, text="Set ID", command=self.toggle_entry_state)
         self.annotator_id_button.pack(in_=self.master_top, side=tk.LEFT)
-        tk.Label(self.master, text="Select classes according to your task description.").pack(anchor=tk.W)
+        self.annotator_mode_button = tk.Button(self.master, text="Change mode", command=self.toggle_annotation_mode)
+        self.annotator_mode_button.pack(in_=self.master_top, side=tk.LEFT)
+        tk.Label(self.master, textvariable=self.m).pack(in_=self.master_top, side=tk.LEFT)
 
         self.im_label = tk.Label(self.master, image=self.img)
         self.im_label.pack(anchor=tk.W)
+        tk.Label(self.master, textvariable=self.d).pack(anchor=tk.W)
 
         self.radio_buttons = []
         for i in range(len(self.classes)):
@@ -103,7 +112,7 @@ class SimplabelGUI():
             self.annotator_id_button.config(text="Set ID")
 
     def refresh_image(self):
-        self.it = ImageTracker(self.im_dir, self.active_annotations_file.get(), self.size)
+        self.it = ImageTracker(self.im_dir.get(), self.active_annotations_file.get(), self.size)
         new_img = self.it.get_image(self.resize.get())
         self.im_label.configure(image=new_img)
         self.im_label.image = new_img
@@ -133,7 +142,7 @@ class SimplabelGUI():
             except IndexError:
                 logging.error("All images have been annotated.")
                 messagebox.showinfo("You're done!", "All images have been annotated!.")
-                self.im_dir = self.config['DIRS']['IMAGES_DIR']
+                self.im_dir.set(self.config['DIRS']['IMAGES_DIR'])
                 self.is_im_dir_default = True
                 self.refresh_image()
 
@@ -141,26 +150,29 @@ class SimplabelGUI():
         self.master.destroy()
 
     def select_dir(self):
-        tmp = self.im_dir
+        tmp = self.im_dir.get()
         try:
-            self.im_dir = filedialog.askdirectory()
+            self.im_dir.set(filedialog.askdirectory())
             self.refresh_image()
-            if not self.im_dir == tmp:
+            print(tmp, self.im_dir.get())
+            if not self.im_dir.get() == tmp:
                 self.is_im_dir_default = False
+                if self.m.get() == "Mode: confirmation":
+                    self.d.set(f"Does this image belong to the class: {self.im_dir.get().split('/')[-1]}?")
         except OSError:
             logging.error('Invaild directory!')
             messagebox.showerror('Error', 'Invaild directory!')
         except IndexError:
             logging.error("There is no images in the directory.")
             messagebox.showerror("Error", "Selected directory does not contain any images or all images have been annnotated.")
-            self.im_dir = self.config['DIRS']['IMAGES_DIR']
+            self.im_dir.set(self.config['DIRS']['IMAGES_DIR'])
             self.is_im_dir_default = True
             self.refresh_image()
         except TypeError:
             logging.error('Directory not selected.')
             pass
 
-    def edit_classes(self):
+    def edit_classes(self, hidden=False):
         classes_popup = tk.Toplevel()
         classes_popup.attributes('-topmost', True)
         classes_popup_top = tk.Frame(classes_popup)
@@ -184,8 +196,11 @@ class SimplabelGUI():
             e.pack(in_=self.classes_popup_bottom, anchor=tk.W)
             self.edit_class_entries.append(e)
 
+        if hidden:
+            classes_popup.withdraw()
+
     def update_classes(self):
-        for i in range(len(self.classes)):
+        for i in range(len(self.class_entry_values)):
             self.classes[i] = self.class_entry_values[i].get()
             button_label = f'[{i+1}] {self.classes[i]}'
             self.radio_buttons[i].config(text=button_label, value=self.classes[i])
@@ -345,3 +360,27 @@ class SimplabelGUI():
         y_scrollbar.pack(in_=popup_window_bottom, side=tk.RIGHT, fill=tk.Y)
         self.annotations_file_content.pack(in_=popup_window_bottom, side=tk.TOP, fill=tk.BOTH, expand=True)
         self.refresh_file_preview()
+
+    def toggle_annotation_mode(self):
+        if self.m.get() == "Mode: selection":
+            self.m.set("Mode: confirmation")
+
+            self.d.set(f"Does this image belong to the class: {self.im_dir.get().split('/')[-1]}?")
+
+            self.class_entry_values = [tk.StringVar(value='Yes'), tk.StringVar(value='No')]
+            self.update_classes()
+
+            self.edit_classes(hidden=True)
+            for i in range(len(self.radio_buttons) - 2):
+                self.remove_class()
+
+        elif self.m.get() == "Mode: confirmation":
+            self.m.set("Mode: selection")
+            self.d.set("Select classes according to your task description.")
+
+            self.edit_classes(hidden=True)
+            for i in range(3):
+                self.add_class()
+
+            self.class_entry_values = [tk.StringVar(value=class_name) for class_name in self.config['ANNOTATION']['CLASSES'].split(',')]
+            self.update_classes()
